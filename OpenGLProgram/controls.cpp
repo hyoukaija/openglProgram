@@ -23,7 +23,7 @@ glm::mat4 getProjectionMatrix()
 	return ProjectionMatrix;
 }
 
-glm::vec3 position = glm::vec3(2, 1.5f, 4);
+glm::vec3 position = glm::vec3(0.5f, 0.5f, 0.5f);
 float horizontalAngle = 3.14f;
 float verticalAngle = 0.0f;
 float initialFoV = 45.0f;
