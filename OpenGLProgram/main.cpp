@@ -75,12 +75,12 @@ void Hilbert(std::vector<glm::vec3> & g_vertex_buffer_data, int n)
 			//start
 			for (int i = 0; i < g_vertex_base.size(); i++)
 			{
-				//z軸の回転
+				//Rotate along the z-axis
 				glm::vec3 az = glm::vec3(0, 1, 0);
 				glm::vec3 bz = glm::vec3(-1, 0, 0);
 				glm::vec3 cz = glm::vec3(0, 0, 1);
 				glm::mat3 matrix_z = glm::mat3(az,bz,cz);
-				//y軸の回転
+				//Rotate along the y-axis
 				glm::vec3 ay = glm::vec3(0, 0, 1);
 				glm::vec3 by = glm::vec3(0, 1, 0);
 				glm::vec3 cy = glm::vec3(-1, 0, 0);
@@ -92,12 +92,12 @@ void Hilbert(std::vector<glm::vec3> & g_vertex_buffer_data, int n)
 			std::vector<glm::vec3> g_vertex_new;
 			for (int i = 0; i < g_vertex_base.size(); i++)
 			{
-				//x軸の回転
+				//Rotate along the x-axis
 				glm::vec3 ax = glm::vec3(1, 0, 0);
 				glm::vec3 bx = glm::vec3(0, 0, 1);
 				glm::vec3 cx = glm::vec3(0, -1, 0);
 				glm::mat3 matrix_x = glm::mat3(ax, bx, cx);
-				//z軸の回転
+				//Rotate along the z-axis
 				glm::vec3 az = glm::vec3(0, -1, 0);
 				glm::vec3 bz = glm::vec3(1, 0, 0);
 				glm::vec3 cz = glm::vec3(0, 0, 1);
@@ -118,7 +118,7 @@ void Hilbert(std::vector<glm::vec3> & g_vertex_buffer_data, int n)
 			g_vertex_new.clear();
 			for (int i = 0; i < g_vertex_base.size(); i++)
 			{
-				//x軸の回転
+				//Rotate along the x-axis
 				glm::vec3 ax = glm::vec3(1, 0, 0);
 				glm::vec3 bx = glm::vec3(0,-1, 0);
 				glm::vec3 cx = glm::vec3(0, 0, -1);
@@ -140,12 +140,12 @@ void Hilbert(std::vector<glm::vec3> & g_vertex_buffer_data, int n)
 			g_vertex_new.clear();
 			for (int i = 0; i < g_vertex_base.size(); i++)
 			{
-				//y軸の回転
+				//Rotate along the y-axis
 				glm::vec3 ay = glm::vec3(0, 0, 1);
 				glm::vec3 by = glm::vec3(0, 1, 0);
 				glm::vec3 cy = glm::vec3(-1, 0, 0);
 				glm::mat3 matrix_y = glm::mat3(ay, by, cy);
-				//z軸の回転
+				//Rotate along the z-axis
 				glm::vec3 az = glm::vec3(0, 1, 0);
 				glm::vec3 bz = glm::vec3(-1, 0, 0);
 				glm::vec3 cz = glm::vec3(0, 0, 1);
@@ -167,12 +167,12 @@ void Hilbert(std::vector<glm::vec3> & g_vertex_buffer_data, int n)
 			g_vertex_new.clear();
 			for (int i = 0; i < g_vertex_base.size(); i++)
 			{
-				//y軸の回転
+				//Rotate along the y-axis
 				glm::vec3 ay = glm::vec3(0, 0, -1);
 				glm::vec3 by = glm::vec3(0, 1, 0);
 				glm::vec3 cy = glm::vec3(1, 0, 0);
 				glm::mat3 matrix_y = glm::mat3(ay, by, cy);
-				//x軸の回転
+				//Rotate along the x-axis
 				glm::vec3 ax = glm::vec3(1, 0, 0);
 				glm::vec3 bx = glm::vec3(0, 0, -1);
 				glm::vec3 cx = glm::vec3(0, 1, 0);
