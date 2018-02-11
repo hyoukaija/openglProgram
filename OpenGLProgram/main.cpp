@@ -13,7 +13,8 @@
 using namespace glm;
 GLFWwindow* window;
 
-#define N 500
+#define N 100000
+
 void vertexSet(std::vector<glm::vec3> & g_vertex_buffer_data)
 {
 	glm::vec3 vertex;
@@ -26,6 +27,7 @@ void vertexSet(std::vector<glm::vec3> & g_vertex_buffer_data)
 	}
 }
 
+
 void vertexColor(std::vector<glm::vec3> & g_color_buffer_data)
 {
 	glm::vec3 color;
@@ -33,6 +35,7 @@ void vertexColor(std::vector<glm::vec3> & g_color_buffer_data)
 	for (int i = 0; i < N; i++)
 	{
 		color = glm::vec3((rand() % (100))*0.01, (rand() % (100))*0.01, (rand() % (100))*0.01);
+		printf("%f", (rand() % (100))*0.01);
 		g_color_buffer_data.push_back(color);
 	}
 	
