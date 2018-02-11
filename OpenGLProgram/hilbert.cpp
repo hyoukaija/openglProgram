@@ -6,17 +6,6 @@
 	vertex = glm::vec3(0, 0, 0);
 	std::vector<glm::vec3> g_vertex_base = g_vertex_buffer_data;
 	std::vector<glm::vec3>::iterator i;
-	for (i = g_vertex_base.begin(); i != g_vertex_base.end(); i++)
-	{
-
-	}
-	g_vertex_buffer_data.push_back(vertex);
-
-	//up
-	for (i = g_vertex_base.begin(); i != g_vertex_base.end(); i++)
-	{
-
-	}
 	g_vertex_buffer_data.push_back(vertex);
 	//back
 	vertex = glm::vec3(-1.0f, 1.0f, 1.0f);
@@ -46,13 +35,18 @@ void Hilbert(std::vector<glm::vec3> & g_vertex_buffer_data, int n)
 	{
 		std::vector<glm::vec3> g_vertex_base = g_vertex_buffer_data;
 		std::vector<glm::vec3>::iterator i;
+		//up
+		for(int k =0; k < 8; k++)
+		{
+		}
 		for (i = g_vertex_base.begin(); i != g_vertex_base.end(); i++)
 		{
+			//×ù˜Ë¤ò‰ä“Q¤·¤Æ¡¢1/8¤òÓ‹Ëã¤¹¤ë
 
 		}
 		g_vertex_buffer_data.push_back(vertex);
 
-		//up
+		
 		for (i = g_vertex_base.begin(); i != g_vertex_base.end(); i++)
 		{
 

@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL\glew.h>
-#include <GLFW/glfw3.h>    
+#include <GLFW/glfw3.h>
+#include <algorithm>
+#include <cmath>
 #include "glm\glm.hpp"
 #include <glm\gtc\matrix_transform.hpp>
 #include "shader.hpp"
@@ -14,7 +16,9 @@ using namespace glm;
 GLFWwindow* window;
 
 #define N 100000
+#define hilberN 6
 
+/*
 void vertexSet(std::vector<glm::vec3> & g_vertex_buffer_data)
 {
 	glm::vec3 vertex;
@@ -26,16 +30,174 @@ void vertexSet(std::vector<glm::vec3> & g_vertex_buffer_data)
 		
 	}
 }
+*/
+void HilbertOne(std::vector<glm::vec3> & g_vertex_buffer_data)
+{
+	glm::vec3 vertex;
+	//start 
+	vertex = glm::vec3(0, 0, 0);
+	g_vertex_buffer_data.push_back(vertex);
+	//up
+	vertex = glm::vec3(0, 1.0f, 0);
+	g_vertex_buffer_data.push_back(vertex);
+	//forward
+	vertex = glm::vec3(0, 1.0f, -1.0f);
+	g_vertex_buffer_data.push_back(vertex);
+	//down
+	vertex = glm::vec3(0, 0, -1.0f);
+	g_vertex_buffer_data.push_back(vertex);
+	//right
+	vertex = glm::vec3(1.0f, 0, -1.0f);
+	g_vertex_buffer_data.push_back(vertex);
+	//up
+	vertex = glm::vec3(1.0f, 1.0f, -1.0f);
+	g_vertex_buffer_data.push_back(vertex);
+	//foward
+	vertex = glm::vec3(1.0f, 1.0f, 0);
+	g_vertex_buffer_data.push_back(vertex);
+	//down
+	vertex = glm::vec3(1.0f, 0, 0);
+	g_vertex_buffer_data.push_back(vertex);
+}
+void Hilbert(std::vector<glm::vec3> & g_vertex_buffer_data, int n)
+{
+	glm::vec3 vertex;
+	//start
+	HilbertOne(g_vertex_buffer_data);
+	if (n != 1){
+		float body_long = 1;
+		for (int j = 2; j <= n; j++)
+		{
+			std::vector<glm::vec3> g_vertex_base = g_vertex_buffer_data;
+			g_vertex_buffer_data.clear();
+			float move = 0.5 / (pow(2, j-1) - 1);
+			glm::vec3 d = glm::vec3(0.5f, 0.5f, 0.5f);
+			//start
+			for (int i = 0; i < g_vertex_base.size(); i++)
+			{
+				//z軸の回転
+				glm::vec3 az = glm::vec3(0, 1, 0);
+				glm::vec3 bz = glm::vec3(-1, 0, 0);
+				glm::vec3 cz = glm::vec3(0, 0, 1);
+				glm::mat3 matrix_z = glm::mat3(az,bz,cz);
+				//y軸の回転
+				glm::vec3 ay = glm::vec3(0, 0, 1);
+				glm::vec3 by = glm::vec3(0, 1, 0);
+				glm::vec3 cy = glm::vec3(-1, 0, 0);
+				glm::mat3 matrix_y = glm::mat3(ay, by, cy);
+				g_vertex_buffer_data.push_back(matrix_y*(matrix_z * g_vertex_base[i]) * d);
+			}
+		
+			//up
+			std::vector<glm::vec3> g_vertex_new;
+			for (int i = 0; i < g_vertex_base.size(); i++)
+			{
+				//x軸の回転
+				glm::vec3 ax = glm::vec3(1, 0, 0);
+				glm::vec3 bx = glm::vec3(0, 0, 1);
+				glm::vec3 cx = glm::vec3(0, -1, 0);
+				glm::mat3 matrix_x = glm::mat3(ax, bx, cx);
+				//z軸の回転
+				glm::vec3 az = glm::vec3(0, -1, 0);
+				glm::vec3 bz = glm::vec3(1, 0, 0);
+				glm::vec3 cz = glm::vec3(0, 0, 1);
+				glm::mat3 matrix_z = glm::mat3(az, bz, cz);
+				glm::vec3 e = glm::vec3(0, 0.5 * body_long + move, 0);
+				g_vertex_new.push_back(matrix_x * (matrix_z * g_vertex_base[i]) * d + e);
+				g_vertex_buffer_data.push_back(g_vertex_new[i]);
+			}
+
+			//back
+			for (int i = 0; i < g_vertex_base.size(); i++)
+			{
+				glm::vec3 e = glm::vec3(0, 0, -0.5 * body_long - move);
+				g_vertex_buffer_data.push_back(g_vertex_new[i] + e);
+			}
+			
+			//down
+			g_vertex_new.clear();
+			for (int i = 0; i < g_vertex_base.size(); i++)
+			{
+				//x軸の回転
+				glm::vec3 ax = glm::vec3(1, 0, 0);
+				glm::vec3 bx = glm::vec3(0,-1, 0);
+				glm::vec3 cx = glm::vec3(0, 0, -1);
+				glm::mat3 matrix_x = glm::mat3(ax, bx, cx);
+				glm::vec3 e = glm::vec3(0, 0.5f * body_long,- body_long -move);
+				g_vertex_new.push_back(matrix_x * g_vertex_base[i] * d + e);
+				g_vertex_buffer_data.push_back(g_vertex_new[i]);
+			}
+			
+			//right
+			for (int i = 0; i < g_vertex_base.size(); i++)
+			{
+				glm::vec3 e = glm::vec3(0.5 * body_long + move, 0, 0);
+				g_vertex_buffer_data.push_back(g_vertex_new[i] + e);
+			}
+	
+
+			//up
+			g_vertex_new.clear();
+			for (int i = 0; i < g_vertex_base.size(); i++)
+			{
+				//y軸の回転
+				glm::vec3 ay = glm::vec3(0, 0, 1);
+				glm::vec3 by = glm::vec3(0, 1, 0);
+				glm::vec3 cy = glm::vec3(-1, 0, 0);
+				glm::mat3 matrix_y = glm::mat3(ay, by, cy);
+				//z軸の回転
+				glm::vec3 az = glm::vec3(0, 1, 0);
+				glm::vec3 bz = glm::vec3(-1, 0, 0);
+				glm::vec3 cz = glm::vec3(0, 0, 1);
+				glm::mat3 matrix_z = glm::mat3(az, bz, cz);
+				glm::vec3 e = glm::vec3(body_long + move, 0.5* body_long + move, -body_long - move);
+				g_vertex_new.push_back(matrix_z * (matrix_y*g_vertex_base[i])*d+e);
+				g_vertex_buffer_data.push_back(g_vertex_new[i]);
+			}
 
 
-void vertexColor(std::vector<glm::vec3> & g_color_buffer_data)
+			//back
+			for (int i = 0; i < g_vertex_base.size(); i++)
+			{
+				glm::vec3 e = glm::vec3(0, 0, 0.5 * body_long +move);
+				g_vertex_buffer_data.push_back(g_vertex_new[i] + e);
+			}
+
+			//down
+			g_vertex_new.clear();
+			for (int i = 0; i < g_vertex_base.size(); i++)
+			{
+				//y軸の回転
+				glm::vec3 ay = glm::vec3(0, 0, -1);
+				glm::vec3 by = glm::vec3(0, 1, 0);
+				glm::vec3 cy = glm::vec3(1, 0, 0);
+				glm::mat3 matrix_y = glm::mat3(ay, by, cy);
+				//x軸の回転
+				glm::vec3 ax = glm::vec3(1, 0, 0);
+				glm::vec3 bx = glm::vec3(0, 0, -1);
+				glm::vec3 cx = glm::vec3(0, 1, 0);
+				glm::mat3 matrix_x = glm::mat3(ax, bx, cx);
+				glm::vec3 e = glm::vec3(body_long+move, body_long/2, 0);
+				g_vertex_buffer_data.push_back(matrix_x*(matrix_y * g_vertex_base[i]) * d + e );
+			}
+
+			body_long = body_long + move;
+		}
+	}	
+}
+
+void vertexSet(std::vector<glm::vec3> & g_vertex_buffer_data)
+{
+	Hilbert(g_vertex_buffer_data, hilberN);
+}
+
+void vertexColor(std::vector<glm::vec3> & g_color_buffer_data,int n)
 {
 	glm::vec3 color;
 	srand((unsigned)time(NULL));
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < n; i++)
 	{
 		color = glm::vec3((rand() % (100))*0.01, (rand() % (100))*0.01, (rand() % (100))*0.01);
-		printf("%f", (rand() % (100))*0.01);
 		g_color_buffer_data.push_back(color);
 	}
 	
@@ -100,7 +262,7 @@ int main()
 	std::vector<glm::vec3> g_vertex_buffer_data;
 	vertexSet(g_vertex_buffer_data);
 	std::vector<glm::vec3> g_color_buffer_data;
-	vertexColor(g_color_buffer_data);
+	vertexColor(g_color_buffer_data, g_vertex_buffer_data.size());
 	
 
 	GLuint vertexbuffer;
